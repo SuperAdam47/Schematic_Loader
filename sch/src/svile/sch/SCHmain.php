@@ -59,6 +59,7 @@ use pocketmine\nbt\tag\ByteArrayTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ShortTag;
 use pocketmine\nbt\tag\StringTag;
+use pocketmine\nbt\BigEndianNBTStream;
 
 //use pocketmine\nbt\tag\ByteArray;
 //use pocketmine\nbt\tag\Compound;
@@ -94,12 +95,12 @@ class SCHmain extends PluginBase implements Listener
         }
 
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
-        $this->getServer()->getScheduler()->scheduleRepeatingTask(new SCHscheduler($this), 21);
+        $this->getScheduler()->scheduleRepeatingTask(new SCHscheduler($this), 21);
 
         $this->getLogger()->info(@str_replace('\n', PHP_EOL, @gzinflate(@base64_decode("pZCxDoIwFEV/pbOJdGcSI2\x47\x51uOhI0pT6bBtbSsqr0S/iP/gy0woDjvrGc8+9w2u6pptGM41i88vNZSgCKudzMo234aENLPyo7wmy\x52NmCL2BAem5Z5V3ok6EQ+yGnFOcos0BXU+XWcm2Siwp\x69\x5aGAnI8uEs4tVaVShXS3KhKL0GXzSs1BgOWrBasev4Ody+81Jb4LUHWlfJDXjLC9Pxb4uD3++7Q0="))));
     }
 
-    public function onCommand(CommandSender $sender, Command $command, $label, array $args)
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
     {
         if (strtolower($command->getName()) == 'sch') {
             //Searchs for a valid option
@@ -165,9 +166,9 @@ class SCHmain extends PluginBase implements Listener
                     }
 
                     touch($path);
-                    $nbt = new NBT(NBT::BIG_ENDIAN);
+                    $nbt = new BigEndianNBTStream();
                     $nbt->readCompressed(file_get_contents($path));
-                    $dataa = $nbt->getData();
+                    $dataa = $this->getNBT();
                     $blocks = $dataa->Blocks->getValue();
                     $data = $dataa->Data->getValue();
                     $height = (int)$dataa->Height->getValue();

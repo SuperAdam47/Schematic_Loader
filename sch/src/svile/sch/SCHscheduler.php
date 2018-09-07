@@ -41,18 +41,18 @@
 namespace svile\sch;
 
 
-use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\Task;
 
 
-class SCHscheduler extends PluginTask
+class SCHscheduler extends Task
 {
-    public function __construct(SCHmain $plugin)
+    public function __construct(SCHmain $owner)
     {
-        parent::__construct($plugin);
+        $this->p = $owner;
     }
 
     public function onRun($tick)
     {
-        $this->getOwner()->tick();
+        $this->p->tick();
     }
 }
